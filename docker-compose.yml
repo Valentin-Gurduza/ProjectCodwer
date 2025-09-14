@@ -1,0 +1,29 @@
+services:
+  projectcodwer:
+    image: ${DOCKER_REGISTRY-}projectcodwer
+    build:
+      context: .
+      dockerfile: ProjectCodwer/ProjectCodwer/Dockerfile
+    depends_on:
+      - sqlserver
+    env_file:
+          - .env
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=CodwerDB;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;
+      - JwtSettings__Key=${JWT_SECRET_KEY}
+      - MailSettings__SmtpPassword=${SMTP_PASSWORD}
+      - MailSettings__SmtpUsername=${SMTP_USERNAME} 
+  
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DB_PASSWORD}
+      - MSSQL_PID=Express
+    ports:
+      - "11433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
