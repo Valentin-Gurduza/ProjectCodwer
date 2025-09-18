@@ -6,6 +6,8 @@ services:
       dockerfile: ProjectCodwer/ProjectCodwer/Dockerfile
     depends_on:
       - sqlserver
+    ports:
+      - "8081:8081"
     env_file:
           - .env
     environment:
@@ -13,6 +15,11 @@ services:
       - JwtSettings__Key=${JWT_SECRET_KEY}
       - MailSettings__SmtpPassword=${SMTP_PASSWORD}
       - MailSettings__SmtpUsername=${SMTP_USERNAME} 
+      - MailSettings__FromEmail=${FROM_EMAIL}
+      - MailSettings__FromName=${FROM_NAME}
+      - ASPNETCORE_URLS=https://+:8081
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    volumes: []
   
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -24,6 +31,12 @@ services:
       - "11433:1433"
     volumes:
       - sqlserverdata:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $$SA_PASSWORD -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
 
 volumes:
   sqlserverdata:

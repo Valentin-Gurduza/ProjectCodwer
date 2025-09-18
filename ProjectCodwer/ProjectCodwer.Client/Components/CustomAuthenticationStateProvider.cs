@@ -22,27 +22,29 @@ namespace ProjectCodwer.Client.Components
             return Task.FromResult(new AuthenticationState(_currentUser));
         }
 
-        public async Task<bool> LoginAsync(string email, string password, bool rememberMe = false)
+        public Task<bool> LoginAsync(string email, string password, bool rememberMe = false)
         {
             try
             {
-                // This would call your API service
-                // Implementation depends on how you want to handle JWT tokens in Blazor WASM
-                // You might store them in localStorage or handle them differently
+                // TODO: Implement actual login logic with API service
+                // This is a placeholder for now
+                _logger.LogInformation("Login attempt for {Email}", email);
                 
-                return false; // Placeholder
+                // For now, return false as this is not implemented
+                return Task.FromResult(false);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during login");
-                return false;
+                return Task.FromResult(false);
             }
         }
 
-        public async Task LogoutAsync()
+        public Task LogoutAsync()
         {
             _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            return Task.CompletedTask;
         }
     }
 }
