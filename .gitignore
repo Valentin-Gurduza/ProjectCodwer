@@ -416,3 +416,7 @@ docker-compose.override.yml
 # Personal access tokens
 .env.secrets
 secrets.json
+
+# Data Protection Keys (contains encryption keys, should not be committed)
+DataProtectionKeys/
+**/DataProtectionKeys/

@@ -40,6 +40,7 @@ namespace ProjectCodwer.Controllers
         }
 
         [HttpPost("register")]
+        [IgnoreAntiforgeryToken] // API endpoints don't need antiforgery tokens
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
             var result = await _mediator.Send(command);
@@ -53,6 +54,7 @@ namespace ProjectCodwer.Controllers
         }
 
         [HttpPost("login")]
+        [IgnoreAntiforgeryToken] // API endpoints don't need antiforgery tokens
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             try
@@ -115,6 +117,7 @@ namespace ProjectCodwer.Controllers
         }
 
         [HttpPost("verify-2fa")]
+        [IgnoreAntiforgeryToken] // API endpoints don't need antiforgery tokens
         public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorRequest request)
         {
             try
@@ -155,6 +158,7 @@ namespace ProjectCodwer.Controllers
 
         [HttpPost("logout")]
         [Authorize]
+        [IgnoreAntiforgeryToken] // API endpoints don't need antiforgery tokens
         public async Task<IActionResult> Logout()
         {
             var userId = _userManager.GetUserId(User);
@@ -167,6 +171,15 @@ namespace ProjectCodwer.Controllers
             }
 
             return Ok(Result.Success());
+        }
+
+        // Add endpoint to get antiforgery token for Blazor forms if needed
+        [HttpGet("antiforgery-token")]
+        public IActionResult GetAntiforgeryToken()
+        {
+            var tokens = HttpContext.RequestServices.GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>();
+            var tokenSet = tokens.GetAndStoreTokens(HttpContext);
+            return Ok(new { token = tokenSet.RequestToken });
         }
     }
 

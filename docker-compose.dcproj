@@ -17,6 +17,8 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="ProjectCodwer\SECURITY_SETUP.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ProjectCodwer\" />
   </ItemGroup>
 </Project>
